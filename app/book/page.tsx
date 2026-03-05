@@ -64,7 +64,27 @@ export default function BookPage() {
         return;
       }
 
-      router.push("/book/confirmation");
+      // Fire-and-forget: send confirmation email
+      fetch("/api/send-confirmation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+          firstName: data.firstName,
+          date: selectedSlot.date,
+          time: selectedSlot.time,
+          service: selectedService,
+        }),
+      }).catch(() => {});
+
+      const params = new URLSearchParams({
+        firstName: data.firstName,
+        date: format(parseISO(selectedSlot.date), "EEEE d MMMM", { locale: fr }),
+        time: selectedSlot.time,
+        service: selectedService,
+      });
+
+      router.push(`/book/confirmation?${params.toString()}`);
     } catch {
       alert("Erreur de connexion");
       setIsLoading(false);
