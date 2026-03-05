@@ -60,6 +60,20 @@ function ConfirmationContent() {
           </div>
         )}
 
+        <div className="mt-6 rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-4 text-left">
+          <p className="mb-2 text-sm font-semibold text-yellow-500">Consignes</p>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li>
+              En arrivant, envoie un message sur Snapchat à{" "}
+              <span className="font-medium text-foreground">@i-ftyyy08</span>{" "}
+              pour qu&apos;on vienne t&apos;ouvrir.
+            </li>
+            <li>
+              Tout retard de <span className="font-medium text-foreground">10 min ou plus</span> ne sera pas accepté.
+            </li>
+          </ul>
+        </div>
+
         <p className="mt-6 text-sm text-muted-foreground">
           Pour toutes demandes spécifique contacte moi sur Snapchat
           <br />

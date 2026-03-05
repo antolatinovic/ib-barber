@@ -17,6 +17,8 @@ export interface Booking {
   service: Service;
   cancellation_token: string;
   cancelled_at: string | null;
+  reminder_24h_sent: boolean;
+  reminder_1h_sent: boolean;
   created_at: string;
 }
 

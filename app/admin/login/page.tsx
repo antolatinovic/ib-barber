@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,7 +35,7 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold tracking-tight">IB BARBER</h1>
+          <Image src="/IMG_8197-removebg-preview.png" alt="IB Barber" width={288} height={96} className="mx-auto h-24 w-auto" />
           <p className="mt-1 text-sm text-muted-foreground">Espace barbier</p>
         </div>
 

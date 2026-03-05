@@ -7,6 +7,7 @@ import { type Service, SERVICES } from "@/types";
 import SlotPicker from "@/components/booking/SlotPicker";
 import ServicePicker from "@/components/booking/ServicePicker";
 import BookingForm from "@/components/booking/BookingForm";
+import Image from "next/image";
 import { format, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -102,8 +103,8 @@ export default function BookPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border/50 px-4 py-4">
-        <div className="mx-auto max-w-lg">
-          <h1 className="text-lg font-bold tracking-tight">IB BARBER</h1>
+        <div className="mx-auto max-w-lg flex justify-center">
+          <Image src="/IMG_8197-removebg-preview.png" alt="IB Barber" width={180} height={60} className="h-14 w-auto" />
         </div>
       </header>
 

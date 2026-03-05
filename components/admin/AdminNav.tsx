@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -26,7 +27,7 @@ export default function AdminNav() {
     <header className="border-b border-border/50 px-4 py-3">
       <div className="mx-auto flex max-w-2xl items-center justify-between">
         <div className="flex items-center gap-6">
-          <span className="text-lg font-bold tracking-tight">IB BARBER</span>
+          <Image src="/IMG_8197-removebg-preview.png" alt="IB Barber" width={150} height={50} className="h-12 w-auto" />
           <nav className="flex gap-4">
             {NAV_ITEMS.map((item) => (
               <Link

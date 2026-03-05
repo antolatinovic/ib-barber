@@ -11,32 +11,40 @@ import {
   Button,
 } from "@react-email/components";
 
-interface ConfirmationEmailProps {
+interface ReminderEmailProps {
   firstName: string;
   date: string;
   time: string;
   service: string;
   cancelUrl?: string | null;
+  isOneHour: boolean;
 }
 
-export default function ConfirmationEmail({
+export default function ReminderEmail({
   firstName,
   date,
   time,
   service,
   cancelUrl,
-}: ConfirmationEmailProps) {
+  isOneHour,
+}: ReminderEmailProps) {
+  const delayLabel = isOneHour ? "dans 1h" : "demain";
+
   return (
     <Html lang="fr">
       <Head />
-      <Preview>Ton RDV chez IB Barber — {date} à {time}</Preview>
+      <Preview>
+        Rappel — Ton RDV {delayLabel} chez IB Barber ({time})
+      </Preview>
       <Body style={body}>
         <Container style={container}>
           <Heading style={header}>IB BARBER</Heading>
           <Hr style={hr} />
 
           <Text style={text}>Salut {firstName},</Text>
-          <Text style={text}>Ta réservation est confirmée.</Text>
+          <Text style={text}>
+            Petit rappel : ton rendez-vous est {delayLabel}.
+          </Text>
 
           <Section style={recapBox}>
             <Text style={recapRow}>
@@ -57,7 +65,8 @@ export default function ConfirmationEmail({
             <Text style={consignesTitle}>Consignes</Text>
             <Text style={text}>
               En arrivant, envoie un message sur Snapchat à{" "}
-              <span style={recapValue}>@i-ftyyy08</span> pour qu&apos;on vienne t&apos;ouvrir.
+              <span style={recapValue}>@i-ftyyy08</span> pour qu&apos;on vienne
+              t&apos;ouvrir.
             </Text>
             <Text style={text}>
               Tout retard de 10 min ou plus ne sera pas accepté.
@@ -67,7 +76,7 @@ export default function ConfirmationEmail({
           {cancelUrl && (
             <>
               <Text style={text}>
-                Tu peux annuler ta réservation jusqu&apos;à 1h avant le rendez-vous :
+                Tu peux encore annuler ta réservation :
               </Text>
               <Button href={cancelUrl} style={cancelButton}>
                 Annuler ma réservation
@@ -86,7 +95,8 @@ export default function ConfirmationEmail({
 const body: React.CSSProperties = {
   backgroundColor: "#0a0a0a",
   color: "#ffffff",
-  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   margin: 0,
   padding: 0,
 };
@@ -167,13 +177,6 @@ const cancelButton: React.CSSProperties = {
   textDecoration: "none",
   display: "inline-block",
   margin: "8px 0 16px",
-};
-
-const snapHandle: React.CSSProperties = {
-  fontSize: "16px",
-  fontWeight: 700,
-  color: "#ffffff",
-  margin: "4px 0 0",
 };
 
 const footer: React.CSSProperties = {

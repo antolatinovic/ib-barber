@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { format, parseISO, startOfWeek, addDays } from "date-fns";
+import { format, parseISO, startOfWeek } from "date-fns";
 import { fr } from "date-fns/locale";
 
 interface SlotData {
@@ -34,25 +34,22 @@ export default function SlotPicker({ selectedSlotId, onSelect }: SlotPickerProps
     async function fetchSlots() {
       setIsLoading(true);
       try {
-        // Fetch current week + next week
         const currentWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
-        const nextWeek = addDays(currentWeek, 7);
+        const res = await fetch(`/api/slots?weekStart=${format(currentWeek, "yyyy-MM-dd")}`);
+        const data = res.ok ? await res.json() : [];
 
-        const [res1, res2] = await Promise.all([
-          fetch(`/api/slots?weekStart=${format(currentWeek, "yyyy-MM-dd")}`),
-          fetch(`/api/slots?weekStart=${format(nextWeek, "yyyy-MM-dd")}`),
-        ]);
+        // Filter out past slots (date + time)
+        const now = new Date();
+        const today = format(now, "yyyy-MM-dd");
+        const currentTime = format(now, "HH:mm");
 
-        const data1 = res1.ok ? await res1.json() : [];
-        const data2 = res2.ok ? await res2.json() : [];
+        const filtered = data.filter((s: SlotData) => {
+          if (s.date > today) return true;
+          if (s.date === today) return s.time.slice(0, 5) > currentTime;
+          return false;
+        });
 
-        // Filter out past dates
-        const today = format(new Date(), "yyyy-MM-dd");
-        const allSlots = [...data1, ...data2].filter(
-          (s: SlotData) => s.date >= today
-        );
-
-        setSlots(allSlots);
+        setSlots(filtered);
       } finally {
         setIsLoading(false);
       }

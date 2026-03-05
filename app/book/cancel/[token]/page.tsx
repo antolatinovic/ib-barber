@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 import { format, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { SERVICES, type Service } from "@/types";
@@ -80,7 +81,7 @@ export default function CancelPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
       <div className="mx-auto max-w-md text-center">
-        <h2 className="mb-8 text-lg font-bold tracking-tight">IB BARBER</h2>
+        <Image src="/IMG_8197-removebg-preview.png" alt="IB Barber" width={180} height={60} className="mx-auto mb-8 h-14 w-auto" />
 
         {status === "loading" && (
           <p className="text-sm text-muted-foreground">Chargement...</p>

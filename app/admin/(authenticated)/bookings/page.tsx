@@ -52,6 +52,29 @@ export default function AdminDashboardPage() {
   );
   const [bookings, setBookings] = useState<BookingWithSlot[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+
+  const handleCancel = async (bookingId: string) => {
+    if (!confirm("Annuler cette réservation ? Le client recevra un email.")) return;
+    setCancellingId(bookingId);
+    try {
+      const res = await fetch("/api/admin/bookings/cancel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId }),
+      });
+      if (res.ok) {
+        fetchBookings(weekStart);
+      } else {
+        const err = await res.json();
+        alert(err.error || "Erreur lors de l'annulation");
+      }
+    } catch {
+      alert("Erreur de connexion");
+    } finally {
+      setCancellingId(null);
+    }
+  };
 
   const weekLabel = useMemo(() => {
     const end = addDays(weekStart, 6);
@@ -191,6 +214,15 @@ export default function AdminDashboardPage() {
                             <span>{booking.email}</span>
                           </div>
                         </div>
+                        {!booking.cancelled_at && (
+                          <button
+                            onClick={() => handleCancel(booking.id)}
+                            disabled={cancellingId === booking.id}
+                            className="shrink-0 rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-medium text-red-400 transition-colors hover:bg-red-500/10 disabled:opacity-50"
+                          >
+                            {cancellingId === booking.id ? "..." : "Annuler"}
+                          </button>
+                        )}
                       </div>
                     ))}
                 </div>
