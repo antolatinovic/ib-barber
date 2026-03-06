@@ -9,6 +9,8 @@ import {
   Heading,
   Hr,
   Button,
+  Row,
+  Column,
 } from "@react-email/components";
 
 interface ConfirmationEmailProps {
@@ -39,18 +41,18 @@ export default function ConfirmationEmail({
           <Text style={text}>Ta réservation est confirmée.</Text>
 
           <Section style={recapBox}>
-            <Text style={recapRow}>
-              <span style={recapLabel}>Date</span>
-              <span style={recapValue}>{date}</span>
-            </Text>
-            <Text style={recapRow}>
-              <span style={recapLabel}>Heure</span>
-              <span style={recapValue}>{time}</span>
-            </Text>
-            <Text style={recapRow}>
-              <span style={recapLabel}>Prestation</span>
-              <span style={recapValue}>{service}</span>
-            </Text>
+            <Row style={recapRow}>
+              <Column style={recapLabel}>Date</Column>
+              <Column style={recapValue}>{date}</Column>
+            </Row>
+            <Row style={recapRow}>
+              <Column style={recapLabel}>Heure</Column>
+              <Column style={recapValue}>{time}</Column>
+            </Row>
+            <Row style={recapRow}>
+              <Column style={recapLabel}>Prestation</Column>
+              <Column style={recapValue}>{service}</Column>
+            </Row>
           </Section>
 
           <Section style={consignesBox}>
@@ -126,15 +128,14 @@ const recapBox: React.CSSProperties = {
 };
 
 const recapRow: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
   fontSize: "14px",
   lineHeight: "28px",
-  margin: "0 0 12px",
+  marginBottom: "12px",
 };
 
 const recapLabel: React.CSSProperties = {
   color: "#a1a1aa",
+  width: "100px",
 };
 
 const recapValue: React.CSSProperties = {
