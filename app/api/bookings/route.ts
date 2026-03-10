@@ -17,16 +17,42 @@ export async function GET(request: NextRequest) {
   const endDate = addDays(parseISO(weekStart), 6).toISOString().split("T")[0];
 
   const serviceClient = createServiceClient();
-  const { data, error } = await serviceClient
-    .from("bookings")
-    .select("*, slots(date, time)")
-    .gte("slots.date", weekStart)
-    .lte("slots.date", endDate)
-    .not("slots", "is", null);
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  // Fetch slots for the week
+  const { data: weekSlots, error: slotsError } = await serviceClient
+    .from("slots")
+    .select("id, date, time")
+    .gte("date", weekStart)
+    .lte("date", endDate);
+
+  if (slotsError) {
+    return NextResponse.json({ error: slotsError.message }, { status: 500 });
   }
+
+  if (!weekSlots || weekSlots.length === 0) {
+    return NextResponse.json([]);
+  }
+
+  const slotIds = weekSlots.map((s) => s.id);
+  const slotMap = new Map(weekSlots.map((s) => [s.id, { date: s.date, time: s.time }]));
+
+  // Fetch bookings for those slots
+  const { data: bookings, error: bookingsError } = await serviceClient
+    .from("bookings")
+    .select("*")
+    .in("slot_id", slotIds);
+
+  if (bookingsError) {
+    return NextResponse.json({ error: bookingsError.message }, { status: 500 });
+  }
+
+  // Join and filter in application code
+  const data = (bookings ?? [])
+    .filter((b) => !b.cancelled_at)
+    .map((b) => ({
+      ...b,
+      slots: slotMap.get(b.slot_id),
+    }));
 
   return NextResponse.json(data);
 }

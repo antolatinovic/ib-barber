@@ -18,30 +18,34 @@ async function getStatsForPeriod(
   from: string,
   to: string
 ): Promise<PeriodStats> {
-  const [slotsRes, bookingsRes] = await Promise.all([
-    supabase
-      .from("slots")
-      .select("is_booked")
-      .gte("date", from)
-      .lte("date", to),
-    supabase
+  // Fetch slots for the period
+  const { data: slots } = await supabase
+    .from("slots")
+    .select("id, is_booked")
+    .gte("date", from)
+    .lte("date", to);
+
+  const allSlots = slots ?? [];
+  const slotIds = allSlots.map((s) => s.id);
+
+  const totalSlots = allSlots.length;
+  const bookedSlots = allSlots.filter((s) => s.is_booked).length;
+
+  // Fetch bookings for those slots (avoid PostgREST join issues)
+  let revenue = 0;
+  if (slotIds.length > 0) {
+    const { data: bookings } = await supabase
       .from("bookings")
-      .select("service, slots(date)")
-      .gte("slots.date", from)
-      .lte("slots.date", to)
-      .not("slots", "is", null)
-      .is("cancelled_at", null),
-  ]);
+      .select("service, guest_service, cancelled_at")
+      .in("slot_id", slotIds);
 
-  const slots = slotsRes.data ?? [];
-  const bookings = bookingsRes.data ?? [];
-
-  const totalSlots = slots.length;
-  const bookedSlots = slots.filter((s) => s.is_booked).length;
-  const revenue = bookings.reduce(
-    (sum, b) => sum + (PRICES[b.service] ?? 0),
-    0
-  );
+    revenue = (bookings ?? [])
+      .filter((b) => !b.cancelled_at)
+      .reduce(
+        (sum, b) => sum + (PRICES[b.service] ?? 0) + (PRICES[b.guest_service] ?? 0),
+        0
+      );
+  }
 
   return { totalSlots, bookedSlots, revenue };
 }
