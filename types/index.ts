@@ -10,11 +10,16 @@ export interface Slot {
 export interface Booking {
   id: string;
   slot_id: string;
+  second_slot_id: string | null;
   first_name: string;
   last_name: string;
   snap: string;
   email: string;
   service: Service;
+  guest_first_name: string | null;
+  guest_last_name: string | null;
+  guest_email: string | null;
+  guest_service: Service | null;
   cancellation_token: string;
   cancelled_at: string | null;
   reminder_24h_sent: boolean;

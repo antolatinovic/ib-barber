@@ -19,6 +19,10 @@ interface ConfirmationEmailProps {
   time: string;
   service: string;
   cancelUrl?: string | null;
+  secondTime?: string | null;
+  guestName?: string | null;
+  isGuest?: boolean;
+  mainName?: string | null;
 }
 
 export default function ConfirmationEmail({
@@ -27,7 +31,14 @@ export default function ConfirmationEmail({
   time,
   service,
   cancelUrl,
+  secondTime,
+  guestName,
+  isGuest,
+  mainName,
 }: ConfirmationEmailProps) {
+  const isDuo = !!secondTime;
+  const timeDisplay = isDuo ? `${time} — ${secondTime}` : time;
+
   return (
     <Html lang="fr">
       <Head />
@@ -38,7 +49,16 @@ export default function ConfirmationEmail({
           <Hr style={hr} />
 
           <Text style={text}>Salut {firstName},</Text>
-          <Text style={text}>Ta réservation est confirmée.</Text>
+          {isGuest && mainName ? (
+            <Text style={text}>
+              Tu es invité(e) par <span style={recapValue}>{mainName}</span>. Votre réservation est confirmée.
+            </Text>
+          ) : (
+            <Text style={text}>
+              Ta réservation est confirmée.
+              {isDuo && " Réservation pour 2 personnes."}
+            </Text>
+          )}
 
           <Section style={recapBox}>
             <Row style={recapRow}>
@@ -47,12 +67,18 @@ export default function ConfirmationEmail({
             </Row>
             <Row style={recapRow}>
               <Column style={recapLabel}>Heure</Column>
-              <Column style={recapValue}>{time}</Column>
+              <Column style={recapValue}>{timeDisplay}</Column>
             </Row>
             <Row style={recapRow}>
               <Column style={recapLabel}>Prestation</Column>
               <Column style={recapValue}>{service}</Column>
             </Row>
+            {isDuo && guestName && !isGuest && (
+              <Row style={recapRow}>
+                <Column style={recapLabel}>Invité(e)</Column>
+                <Column style={recapValue}>{guestName}</Column>
+              </Row>
+            )}
           </Section>
 
           <Section style={consignesBox}>
@@ -168,13 +194,6 @@ const cancelButton: React.CSSProperties = {
   textDecoration: "none",
   display: "inline-block",
   margin: "8px 0 16px",
-};
-
-const snapHandle: React.CSSProperties = {
-  fontSize: "16px",
-  fontWeight: 700,
-  color: "#ffffff",
-  margin: "4px 0 0",
 };
 
 const footer: React.CSSProperties = {

@@ -6,14 +6,16 @@ import { type Service, SERVICES } from "@/types";
 interface ServicePickerProps {
   selectedService: Service | null;
   onSelect: (service: Service) => void;
+  label?: string;
+  subtitle?: string;
 }
 
-export default function ServicePicker({ selectedService, onSelect }: ServicePickerProps) {
+export default function ServicePicker({ selectedService, onSelect, label, subtitle }: ServicePickerProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold">Choisis ta prestation</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Sélectionne le service souhaité</p>
+        <h2 className="text-xl font-semibold">{label ?? "Choisis ta prestation"}</h2>
+        <p className="mt-1 text-sm text-muted-foreground">{subtitle ?? "Sélectionne le service souhaité"}</p>
       </div>
 
       <div className="grid gap-3">

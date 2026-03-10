@@ -10,13 +10,23 @@ function ConfirmationContent() {
   const date = searchParams.get("date");
   const time = searchParams.get("time");
   const serviceKey = searchParams.get("service");
+  const withGuest = searchParams.get("withGuest") === "1";
+  const secondTime = searchParams.get("secondTime");
+  const guestFirstName = searchParams.get("guestFirstName");
+  const guestServiceKey = searchParams.get("guestService");
 
   const serviceLabel =
     serviceKey && (serviceKey === "coupe" || serviceKey === "coupe_barbe")
       ? SERVICES[serviceKey as Service].label
       : null;
 
+  const guestServiceLabel =
+    guestServiceKey && (guestServiceKey === "coupe" || guestServiceKey === "coupe_barbe")
+      ? SERVICES[guestServiceKey as Service].label
+      : null;
+
   const hasDetails = date && time && serviceLabel;
+  const timeDisplay = withGuest && secondTime ? `${time} — ${secondTime}` : time;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
@@ -38,7 +48,9 @@ function ConfirmationContent() {
           {firstName ? `Merci ${firstName} !` : "Réservation confirmée"}
         </h1>
         <p className="mt-3 text-muted-foreground">
-          Tu vas recevoir un email de confirmation avec les détails de ton rendez-vous.
+          {withGuest
+            ? "Vous allez recevoir un email de confirmation chacun avec les détails du rendez-vous."
+            : "Tu vas recevoir un email de confirmation avec les détails de ton rendez-vous."}
         </p>
 
         {hasDetails && (
@@ -50,12 +62,29 @@ function ConfirmationContent() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Heure</span>
-                <span className="font-medium">{time}</span>
+                <span className="font-medium">{timeDisplay}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Prestation</span>
                 <span className="font-medium">{serviceLabel}</span>
               </div>
+              {withGuest && guestFirstName && (
+                <>
+                  <div className="border-t border-border/50 pt-3">
+                    <span className="text-xs font-medium text-muted-foreground">Invité(e)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Nom</span>
+                    <span className="font-medium">{guestFirstName}</span>
+                  </div>
+                  {guestServiceLabel && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Prestation</span>
+                      <span className="font-medium">{guestServiceLabel}</span>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
         )}

@@ -16,6 +16,11 @@ interface BookingWithSlot {
   snap: string;
   email: string;
   service: Service;
+  second_slot_id: string | null;
+  guest_first_name: string | null;
+  guest_last_name: string | null;
+  guest_email: string | null;
+  guest_service: Service | null;
   cancelled_at: string | null;
   created_at: string;
   slots: {
@@ -28,9 +33,10 @@ interface BookingWithSlot {
 function getTimeRange(bookings: BookingWithSlot[]): string[] {
   if (bookings.length === 0) return [];
 
-  const minutes = bookings.map((b) => {
+  const minutes = bookings.flatMap((b) => {
     const [h, m] = b.slots.time.split(":").map(Number);
-    return h * 60 + m;
+    const base = h * 60 + m;
+    return b.second_slot_id ? [base, base + 30] : [base];
   });
 
   const minTime = Math.floor(Math.min(...minutes) / 30) * 30;
@@ -120,6 +126,18 @@ export default function AdminDashboardPage() {
     );
   }
 
+  // Check if a cell is occupied by a +1 booking's second slot
+  function getBookingSecondSlotAt(date: string, time: string) {
+    return bookings.find((b) => {
+      if (!b.second_slot_id || b.slots.date !== date) return false;
+      const [h, m] = b.slots.time.split(":").map(Number);
+      const nextMin = h * 60 + m + 30;
+      const nextH = Math.floor(nextMin / 60).toString().padStart(2, "0");
+      const nextM = (nextMin % 60).toString().padStart(2, "0");
+      return `${nextH}:${nextM}` === time;
+    });
+  }
+
   return (
     <div className="space-y-6">
       {/* Header: week nav + view toggle */}
@@ -202,6 +220,11 @@ export default function AdminDashboardPage() {
                             <span className="text-sm font-medium">
                               {booking.first_name} {booking.last_name}
                             </span>
+                            {booking.guest_first_name && (
+                              <span className="rounded-full bg-foreground/10 px-2 py-0.5 text-[10px] font-semibold text-foreground">
+                                +1
+                              </span>
+                            )}
                             {booking.cancelled_at && (
                               <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-semibold text-red-400">
                                 Annulé
@@ -213,6 +236,13 @@ export default function AdminDashboardPage() {
                             <span>@{booking.snap}</span>
                             <span>{booking.email}</span>
                           </div>
+                          {booking.guest_first_name && (
+                            <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                              <span>Invité : {booking.guest_first_name} {booking.guest_last_name}</span>
+                              {booking.guest_service && <span>{SERVICES[booking.guest_service]?.label}</span>}
+                              {booking.guest_email && <span>{booking.guest_email}</span>}
+                            </div>
+                          )}
                         </div>
                         {!booking.cancelled_at && (
                           <button
@@ -260,24 +290,34 @@ export default function AdminDashboardPage() {
                   {weekDays.map((day) => {
                     const dateStr = format(day, "yyyy-MM-dd");
                     const booking = getBookingAt(dateStr, time);
+                    const secondSlotBooking = !booking ? getBookingSecondSlotAt(dateStr, time) : null;
+                    const displayBooking = booking || secondSlotBooking;
+                    const isSecondSlot = !!secondSlotBooking && !booking;
+
                     return (
                       <div
                         key={dateStr}
                         className="flex items-center border-l border-border/20 px-1 py-1"
                       >
-                        {booking && (
+                        {displayBooking && (
                           <div className={cn(
                             "w-full rounded-md px-2 py-1",
-                            booking.cancelled_at ? "bg-red-500/10" : "bg-foreground/10"
+                            displayBooking.cancelled_at ? "bg-red-500/10" : "bg-foreground/10"
                           )}>
                             <p className={cn(
                               "truncate text-xs font-medium",
-                              booking.cancelled_at && "line-through opacity-60"
+                              displayBooking.cancelled_at && "line-through opacity-60"
                             )}>
-                              {booking.first_name} {booking.last_name.charAt(0)}.
+                              {isSecondSlot && displayBooking.guest_first_name
+                                ? `${displayBooking.guest_first_name} ${displayBooking.guest_last_name?.charAt(0) ?? ""}.`
+                                : `${displayBooking.first_name} ${displayBooking.last_name.charAt(0)}.`}
                             </p>
                             <p className="truncate text-[10px] text-muted-foreground">
-                              {booking.cancelled_at ? "Annulé" : SERVICES[booking.service]?.label}
+                              {displayBooking.cancelled_at
+                                ? "Annulé"
+                                : isSecondSlot && displayBooking.guest_service
+                                  ? SERVICES[displayBooking.guest_service]?.label
+                                  : SERVICES[displayBooking.service]?.label}
                             </p>
                           </div>
                         )}

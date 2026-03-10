@@ -7,7 +7,10 @@ import ConfirmationEmail from "@/emails/confirmation";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, firstName, date, time, service, cancellationToken } = await request.json();
+    const {
+      email, firstName, date, time, service, cancellationToken,
+      secondTime, guestName, isGuest, mainName,
+    } = await request.json();
 
     if (!email || !firstName || !date || !time || !service) {
       return NextResponse.json(
@@ -27,6 +30,10 @@ export async function POST(request: NextRequest) {
     const formatted = format(parseISO(date), "EEEE d MMMM", { locale: fr });
     const formattedDate = formatted.charAt(0).toUpperCase() + formatted.slice(1);
 
+    const cancelUrl = cancellationToken
+      ? `${process.env.NEXT_PUBLIC_APP_URL || "https://ib-barber.vercel.app"}/book/cancel/${cancellationToken}`
+      : null;
+
     const { error } = await resend.emails.send({
       from: process.env.FROM_EMAIL || "IB Barber <reservations@ib-barber.com>",
       to: email,
@@ -36,9 +43,11 @@ export async function POST(request: NextRequest) {
         date: formattedDate,
         time,
         service: serviceLabel,
-        cancelUrl: cancellationToken
-          ? `${process.env.NEXT_PUBLIC_APP_URL || "https://ib-barber.vercel.app"}/book/cancel/${cancellationToken}`
-          : null,
+        cancelUrl,
+        secondTime: secondTime || null,
+        guestName: guestName || null,
+        isGuest: isGuest || false,
+        mainName: mainName || null,
       }),
     });
 

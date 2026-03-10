@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
   const { data: booking, error: fetchError } = await serviceClient
     .from("bookings")
-    .select("id, slot_id, first_name, email, service, cancelled_at, slots(date, time)")
+    .select("id, slot_id, second_slot_id, first_name, email, service, cancelled_at, slots(date, time)")
     .eq("id", bookingId)
     .single();
 
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Déjà annulée" }, { status: 409 });
   }
 
-  // Free the slot
+  // Free the slot(s)
   const { error: slotError } = await serviceClient
     .from("slots")
     .update({ is_booked: false })
@@ -40,6 +40,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: slotError.message }, { status: 500 });
   }
 
+  if (booking.second_slot_id) {
+    await serviceClient
+      .from("slots")
+      .update({ is_booked: false })
+      .eq("id", booking.second_slot_id);
+  }
+
   // Soft-delete: mark as cancelled
   const { error: cancelError } = await serviceClient
     .from("bookings")
@@ -47,8 +54,11 @@ export async function POST(request: NextRequest) {
     .eq("id", booking.id);
 
   if (cancelError) {
-    // Rollback: re-book the slot
+    // Rollback: re-book the slot(s)
     await serviceClient.from("slots").update({ is_booked: true }).eq("id", booking.slot_id);
+    if (booking.second_slot_id) {
+      await serviceClient.from("slots").update({ is_booked: true }).eq("id", booking.second_slot_id);
+    }
     return NextResponse.json({ error: cancelError.message }, { status: 500 });
   }
 

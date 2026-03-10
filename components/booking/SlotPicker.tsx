@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { format, parseISO, startOfWeek } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -14,7 +14,8 @@ interface SlotData {
 
 interface SlotPickerProps {
   selectedSlotId: string | null;
-  onSelect: (slot: SlotData) => void;
+  withGuest: boolean;
+  onSelect: (slot: SlotData, secondSlot?: SlotData) => void;
 }
 
 function groupByDate(slots: SlotData[]) {
@@ -26,7 +27,15 @@ function groupByDate(slots: SlotData[]) {
   return groups;
 }
 
-export default function SlotPicker({ selectedSlotId, onSelect }: SlotPickerProps) {
+function addMinutes(time: string, minutes: number): string {
+  const [h, m] = time.slice(0, 5).split(":").map(Number);
+  const total = h * 60 + m + minutes;
+  const newH = Math.floor(total / 60).toString().padStart(2, "0");
+  const newM = (total % 60).toString().padStart(2, "0");
+  return `${newH}:${newM}`;
+}
+
+export default function SlotPicker({ selectedSlotId, withGuest, onSelect }: SlotPickerProps) {
   const [slots, setSlots] = useState<SlotData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -58,7 +67,49 @@ export default function SlotPicker({ selectedSlotId, onSelect }: SlotPickerProps
     fetchSlots();
   }, []);
 
+  // Lookup for finding consecutive slots
+  const slotLookup = useMemo(() => {
+    const map = new Map<string, SlotData>();
+    for (const slot of slots) {
+      map.set(`${slot.date}|${slot.time.slice(0, 5)}`, slot);
+    }
+    return map;
+  }, [slots]);
+
+  function getNextSlot(slot: SlotData): SlotData | undefined {
+    const nextTime = addMinutes(slot.time, 30);
+    return slotLookup.get(`${slot.date}|${nextTime}`);
+  }
+
+  function isDisabled(slot: SlotData): boolean {
+    if (slot.is_booked) return true;
+    if (withGuest) {
+      const next = getNextSlot(slot);
+      return !next || next.is_booked;
+    }
+    return false;
+  }
+
+  const handleSelect = (slot: SlotData) => {
+    if (withGuest) {
+      const next = getNextSlot(slot);
+      onSelect(slot, next);
+    } else {
+      onSelect(slot);
+    }
+  };
+
   const grouped = groupByDate(slots);
+
+  // Find the second selected slot for visual highlight
+  const selectedSecondSlotId = useMemo(() => {
+    if (!withGuest || !selectedSlotId) return null;
+    const selected = slots.find((s) => s.id === selectedSlotId);
+    if (!selected) return null;
+    const next = getNextSlot(selected);
+    return next?.id ?? null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [withGuest, selectedSlotId, slots, slotLookup]);
 
   if (isLoading) {
     return (
@@ -86,7 +137,11 @@ export default function SlotPicker({ selectedSlotId, onSelect }: SlotPickerProps
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold">Choisis ton créneau</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Sélectionne un jour et un horaire disponible</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {withGuest
+            ? "Sélectionne un horaire — 2 créneaux consécutifs seront réservés"
+            : "Sélectionne un jour et un horaire disponible"}
+        </p>
       </div>
 
       {Object.entries(grouped).map(([date, dateSlots]) => (
@@ -95,25 +150,32 @@ export default function SlotPicker({ selectedSlotId, onSelect }: SlotPickerProps
             {format(parseISO(date), "EEEE d MMMM", { locale: fr })}
           </h3>
           <div className="flex flex-wrap gap-2">
-            {dateSlots.map((slot) => (
-              <button
-                key={slot.id}
-                disabled={slot.is_booked}
-                onClick={() => onSelect(slot)}
-                className={cn(
-                  "rounded-full border px-4 py-2 text-sm font-medium transition-all",
-                  slot.is_booked &&
-                    "cursor-not-allowed border-border/50 text-muted-foreground/40 line-through",
-                  !slot.is_booked &&
-                    selectedSlotId !== slot.id &&
-                    "border-border text-foreground hover:border-foreground hover:bg-foreground/5",
-                  selectedSlotId === slot.id &&
-                    "border-foreground bg-foreground text-background"
-                )}
-              >
-                {slot.time.slice(0, 5)}
-              </button>
-            ))}
+            {dateSlots.map((slot) => {
+              const disabled = isDisabled(slot);
+              const isSelected = selectedSlotId === slot.id;
+              const isSecondSelected = selectedSecondSlotId === slot.id;
+
+              return (
+                <button
+                  key={slot.id}
+                  disabled={disabled}
+                  onClick={() => handleSelect(slot)}
+                  className={cn(
+                    "rounded-full border px-4 py-2 text-sm font-medium transition-all",
+                    disabled &&
+                      "cursor-not-allowed border-border/50 text-muted-foreground/40 line-through",
+                    !disabled &&
+                      !isSelected &&
+                      !isSecondSelected &&
+                      "border-border text-foreground hover:border-foreground hover:bg-foreground/5",
+                    (isSelected || isSecondSelected) &&
+                      "border-foreground bg-foreground text-background"
+                  )}
+                >
+                  {slot.time.slice(0, 5)}
+                </button>
+              );
+            })}
           </div>
         </div>
       ))}

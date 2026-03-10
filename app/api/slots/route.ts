@@ -34,8 +34,41 @@ export async function POST(request: NextRequest) {
   }
 
   const { slots } = await request.json();
-
   const serviceClient = createServiceClient();
+
+  // Calculer la plage de dates des nouveaux créneaux
+  const dates = slots.map((s: { date: string }) => s.date);
+  const minDate = dates.reduce((a: string, b: string) => (a < b ? a : b));
+  const maxDate = dates.reduce((a: string, b: string) => (a > b ? a : b));
+
+  // Set des nouveaux créneaux pour comparaison rapide
+  const newSlotKeys = new Set(
+    slots.map((s: { date: string; time: string }) => `${s.date}|${s.time}`)
+  );
+
+  // Récupérer les créneaux existants non-réservés dans la plage
+  const { data: existing } = await serviceClient
+    .from("slots")
+    .select("id, date, time")
+    .gte("date", minDate)
+    .lte("date", maxDate)
+    .eq("is_booked", false);
+
+  // Supprimer ceux qui ne sont plus dans la nouvelle config
+  if (existing && existing.length > 0) {
+    const toDelete = existing
+      .filter((s) => !newSlotKeys.has(`${s.date}|${s.time}`))
+      .map((s) => s.id);
+
+    if (toDelete.length > 0) {
+      await serviceClient
+        .from("slots")
+        .delete()
+        .in("id", toDelete);
+    }
+  }
+
+  // Upsert les nouveaux créneaux
   const { error } = await serviceClient
     .from("slots")
     .upsert(

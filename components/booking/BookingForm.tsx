@@ -4,23 +4,47 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface BookingFormProps {
-  onSubmit: (data: { firstName: string; lastName: string; snap: string; email: string }) => void;
-  isLoading: boolean;
+interface BookingFormData {
+  firstName: string;
+  lastName: string;
+  snap: string;
+  email: string;
+  guestFirstName?: string;
+  guestLastName?: string;
+  guestEmail?: string;
 }
 
-export default function BookingForm({ onSubmit, isLoading }: BookingFormProps) {
+interface BookingFormProps {
+  onSubmit: (data: BookingFormData) => void;
+  isLoading: boolean;
+  withGuest?: boolean;
+}
+
+export default function BookingForm({ onSubmit, isLoading, withGuest }: BookingFormProps) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [snap, setSnap] = useState("");
   const [email, setEmail] = useState("");
+  const [guestFirstName, setGuestFirstName] = useState("");
+  const [guestLastName, setGuestLastName] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
 
-  const isValid = firstName.trim() && lastName.trim() && snap.trim() && email.trim();
+  const mainValid = firstName.trim() && lastName.trim() && snap.trim() && email.trim();
+  const guestValid = !withGuest || (guestFirstName.trim() && guestLastName.trim() && guestEmail.trim());
+  const isValid = mainValid && guestValid;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid) return;
-    onSubmit({ firstName, lastName, snap, email });
+    onSubmit({
+      firstName,
+      lastName,
+      snap,
+      email,
+      ...(withGuest
+        ? { guestFirstName, guestLastName, guestEmail }
+        : {}),
+    });
   };
 
   return (
@@ -76,6 +100,47 @@ export default function BookingForm({ onSubmit, isLoading }: BookingFormProps) {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
+
+        {withGuest && (
+          <>
+            <div className="mt-6 border-t border-border/50 pt-6">
+              <h3 className="text-lg font-semibold">Informations de ton invité(e)</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Pour la personne qui t&apos;accompagne</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="guestFirstName">Prénom</Label>
+                <Input
+                  id="guestFirstName"
+                  placeholder="Prénom"
+                  value={guestFirstName}
+                  onChange={(e) => setGuestFirstName(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="guestLastName">Nom</Label>
+                <Input
+                  id="guestLastName"
+                  placeholder="Nom"
+                  value={guestLastName}
+                  onChange={(e) => setGuestLastName(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="guestEmail">Email</Label>
+              <Input
+                id="guestEmail"
+                type="email"
+                placeholder="invité@email.com"
+                value={guestEmail}
+                onChange={(e) => setGuestEmail(e.target.value)}
+              />
+            </div>
+          </>
+        )}
 
         <button
           type="submit"

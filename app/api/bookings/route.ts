@@ -32,8 +32,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const { slotId, firstName, lastName, snap, email, service } = await request.json();
+  const {
+    slotId, firstName, lastName, snap, email, service,
+    secondSlotId, guestFirstName, guestLastName, guestEmail, guestService,
+  } = await request.json();
 
+  // Validate required fields
   if (!slotId || !firstName || !lastName || !snap || !email || !service) {
     return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
   }
@@ -51,9 +55,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Service invalide" }, { status: 400 });
   }
 
+  // Validate guest fields if +1
+  const hasGuest = !!secondSlotId;
+  if (hasGuest) {
+    if (!guestFirstName || !guestLastName || !guestEmail || !guestService) {
+      return NextResponse.json({ error: "Champs de l'invité manquants" }, { status: 400 });
+    }
+    if (guestFirstName.length > 50 || guestLastName.length > 50) {
+      return NextResponse.json({ error: "Les champs ne doivent pas dépasser 50 caractères" }, { status: 400 });
+    }
+    if (!emailRegex.test(guestEmail) || guestEmail.length > 254) {
+      return NextResponse.json({ error: "Email de l'invité invalide" }, { status: 400 });
+    }
+    if (guestService !== "coupe" && guestService !== "coupe_barbe") {
+      return NextResponse.json({ error: "Service de l'invité invalide" }, { status: 400 });
+    }
+  }
+
   const supabase = createServiceClient();
 
-  // Anti double-booking: only update if slot is not already booked
+  // Book first slot
   const { data: slot, error: slotError } = await supabase
     .from("slots")
     .update({ is_booked: true })
@@ -66,25 +87,55 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Ce créneau n'est plus disponible" }, { status: 409 });
   }
 
+  // Book second slot if +1
+  if (hasGuest) {
+    const { data: secondSlot, error: secondSlotError } = await supabase
+      .from("slots")
+      .update({ is_booked: true })
+      .eq("id", secondSlotId)
+      .eq("is_booked", false)
+      .select()
+      .single();
+
+    if (secondSlotError || !secondSlot) {
+      // Rollback first slot
+      await supabase.from("slots").update({ is_booked: false }).eq("id", slotId);
+      return NextResponse.json({ error: "Le créneau suivant n'est plus disponible" }, { status: 409 });
+    }
+  }
+
   const cancellationToken = crypto.randomUUID();
+
+  const bookingData: Record<string, unknown> = {
+    slot_id: slotId,
+    first_name: firstName,
+    last_name: lastName,
+    snap,
+    email,
+    service,
+    cancellation_token: cancellationToken,
+  };
+
+  if (hasGuest) {
+    bookingData.second_slot_id = secondSlotId;
+    bookingData.guest_first_name = guestFirstName;
+    bookingData.guest_last_name = guestLastName;
+    bookingData.guest_email = guestEmail;
+    bookingData.guest_service = guestService;
+  }
 
   const { data: booking, error: bookingError } = await supabase
     .from("bookings")
-    .insert({
-      slot_id: slotId,
-      first_name: firstName,
-      last_name: lastName,
-      snap,
-      email,
-      service,
-      cancellation_token: cancellationToken,
-    })
+    .insert(bookingData)
     .select()
     .single();
 
   if (bookingError) {
-    // Rollback: unbook the slot
+    // Rollback: unbook the slot(s)
     await supabase.from("slots").update({ is_booked: false }).eq("id", slotId);
+    if (hasGuest) {
+      await supabase.from("slots").update({ is_booked: false }).eq("id", secondSlotId);
+    }
     return NextResponse.json({ error: bookingError.message }, { status: 500 });
   }
 
