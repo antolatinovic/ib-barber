@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { resend } from "@/lib/resend";
+import { getResend } from "@/lib/resend";
 import { SERVICES, type Service } from "@/types";
 import { format, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     const formatted = format(parseISO(date), "EEEE d MMMM", { locale: fr });
     const formattedDate = formatted.charAt(0).toUpperCase() + formatted.slice(1);
 
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: process.env.FROM_EMAIL || "IB Barber <reservations@ib-barber.com>",
       to: email,
       subject: `Annulation de ton RDV — ${formattedDate} à ${time}`,
