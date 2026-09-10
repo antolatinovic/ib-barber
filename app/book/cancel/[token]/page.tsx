@@ -6,6 +6,7 @@ import Image from "next/image";
 import { format, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { SERVICES, type Service } from "@/types";
+import { Grain, GoldGlow } from "@/components/home/BrandAtmosphere";
 
 type Status = "loading" | "found" | "not_found" | "already_cancelled" | "cancelled" | "error";
 
@@ -79,8 +80,10 @@ export default function CancelPage() {
     : "";
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
-      <div className="mx-auto max-w-md text-center">
+    <div className="book-theme relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background px-4">
+      <Grain />
+      <GoldGlow />
+      <div className="relative mx-auto max-w-md text-center">
         <Image src="/IMG_8197-removebg-preview.png" alt="IB Barber" width={180} height={60} className="mx-auto mb-8 h-14 w-auto" />
 
         {status === "loading" && (
@@ -100,7 +103,7 @@ export default function CancelPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
-            <h1 className="text-xl font-bold">Réservation introuvable</h1>
+            <h1 className="text-2xl uppercase tracking-wide" style={{ fontFamily: "var(--font-bebas)" }}>Réservation introuvable</h1>
             <p className="mt-3 text-sm text-muted-foreground">
               Ce lien n&apos;est plus valide. La réservation a peut-être déjà été annulée.
             </p>
@@ -109,7 +112,7 @@ export default function CancelPage() {
 
         {status === "found" && booking && (
           <>
-            <h1 className="text-xl font-bold">Annuler ta réservation ?</h1>
+            <h1 className="text-2xl uppercase tracking-wide" style={{ fontFamily: "var(--font-bebas)" }}>Annuler ta réservation ?</h1>
 
             <div className="mt-6 rounded-xl border border-border p-4 text-left">
               <div className="space-y-3 text-sm">
@@ -163,7 +166,7 @@ export default function CancelPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
-            <h1 className="text-xl font-bold">Déjà annulée</h1>
+            <h1 className="text-2xl uppercase tracking-wide" style={{ fontFamily: "var(--font-bebas)" }}>Déjà annulée</h1>
             <p className="mt-3 text-sm text-muted-foreground">
               Cette réservation a déjà été annulée.
             </p>
@@ -172,9 +175,9 @@ export default function CancelPage() {
 
         {status === "cancelled" && (
           <>
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-foreground">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
               <svg
-                className="h-8 w-8 text-background"
+                className="h-8 w-8 text-primary-foreground"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2.5}
@@ -183,7 +186,7 @@ export default function CancelPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             </div>
-            <h1 className="text-xl font-bold">Réservation annulée</h1>
+            <h1 className="text-2xl uppercase tracking-wide" style={{ fontFamily: "var(--font-bebas)" }}>Réservation annulée</h1>
             <p className="mt-3 text-sm text-muted-foreground">
               Ton rendez-vous a bien été annulé. Le créneau est de nouveau disponible.
             </p>

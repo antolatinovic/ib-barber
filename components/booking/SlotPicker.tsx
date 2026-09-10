@@ -115,7 +115,7 @@ export default function SlotPicker({ selectedSlotId, withGuest, onSelect }: Slot
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-xl font-semibold">Choisis ton créneau</h2>
+          <h2 className="text-2xl uppercase tracking-wide" style={{ fontFamily: "var(--font-bebas)" }}>Choisis ton créneau</h2>
           <p className="mt-1 text-sm text-muted-foreground">Chargement des disponibilités...</p>
         </div>
       </div>
@@ -126,7 +126,7 @@ export default function SlotPicker({ selectedSlotId, withGuest, onSelect }: Slot
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-xl font-semibold">Choisis ton créneau</h2>
+          <h2 className="text-2xl uppercase tracking-wide" style={{ fontFamily: "var(--font-bebas)" }}>Choisis ton créneau</h2>
           <p className="mt-1 text-sm text-muted-foreground">Aucun créneau disponible pour le moment.</p>
         </div>
       </div>
@@ -136,7 +136,7 @@ export default function SlotPicker({ selectedSlotId, withGuest, onSelect }: Slot
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold">Choisis ton créneau</h2>
+        <h2 className="text-2xl uppercase tracking-wide" style={{ fontFamily: "var(--font-bebas)" }}>Choisis ton créneau</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           {withGuest
             ? "Sélectionne un horaire — 2 créneaux consécutifs seront réservés"
@@ -167,9 +167,9 @@ export default function SlotPicker({ selectedSlotId, withGuest, onSelect }: Slot
                     !disabled &&
                       !isSelected &&
                       !isSecondSelected &&
-                      "border-border text-foreground hover:border-foreground hover:bg-foreground/5",
+                      "border-border text-foreground hover:border-primary hover:bg-primary/5",
                     (isSelected || isSecondSelected) &&
-                      "border-foreground bg-foreground text-background"
+                      "border-primary bg-primary text-primary-foreground"
                   )}
                 >
                   {slot.time.slice(0, 5)}

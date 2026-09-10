@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { type Service, SERVICES } from "@/types";
+import { Grain, GoldGlow } from "@/components/home/BrandAtmosphere";
 
 function ConfirmationContent() {
   const searchParams = useSearchParams();
@@ -29,12 +30,14 @@ function ConfirmationContent() {
   const timeDisplay = withGuest && secondTime ? `${time} — ${secondTime}` : time;
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
-      <div className="mx-auto max-w-md text-center">
+    <div className="book-theme relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background px-4">
+      <Grain />
+      <GoldGlow />
+      <div className="relative mx-auto max-w-md text-center">
         {/* Checkmark */}
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-foreground">
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
           <svg
-            className="h-8 w-8 text-background"
+            className="h-8 w-8 text-primary-foreground"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2.5}
@@ -44,7 +47,7 @@ function ConfirmationContent() {
           </svg>
         </div>
 
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-3xl uppercase tracking-wide" style={{ fontFamily: "var(--font-bebas)" }}>
           {firstName ? `Merci ${firstName} !` : "Réservation confirmée"}
         </h1>
         <p className="mt-3 text-muted-foreground">
@@ -89,8 +92,8 @@ function ConfirmationContent() {
           </div>
         )}
 
-        <div className="mt-6 rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-4 text-left">
-          <p className="mb-2 text-sm font-semibold text-yellow-500">Consignes</p>
+        <div className="mt-6 rounded-xl border border-primary/30 bg-primary/5 p-4 text-left">
+          <p className="mb-2 text-sm font-semibold text-primary">Consignes</p>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>
               En arrivant, envoie un message sur Snapchat à{" "}
@@ -115,7 +118,7 @@ function ConfirmationContent() {
 
 export default function ConfirmationPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-background" />}>
+    <Suspense fallback={<div className="book-theme min-h-screen bg-background" />}>
       <ConfirmationContent />
     </Suspense>
   );

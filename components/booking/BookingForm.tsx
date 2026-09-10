@@ -50,7 +50,7 @@ export default function BookingForm({ onSubmit, isLoading, withGuest }: BookingF
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold">Tes informations</h2>
+        <h2 className="text-2xl uppercase tracking-wide" style={{ fontFamily: "var(--font-bebas)" }}>Tes informations</h2>
         <p className="mt-1 text-sm text-muted-foreground">Pour confirmer ta réservation</p>
       </div>
 
@@ -104,7 +104,7 @@ export default function BookingForm({ onSubmit, isLoading, withGuest }: BookingF
         {withGuest && (
           <>
             <div className="mt-6 border-t border-border/50 pt-6">
-              <h3 className="text-lg font-semibold">Informations de ton invité(e)</h3>
+              <h3 className="text-xl uppercase tracking-wide" style={{ fontFamily: "var(--font-bebas)" }}>Informations de ton invité(e)</h3>
               <p className="mt-1 text-sm text-muted-foreground">Pour la personne qui t&apos;accompagne</p>
             </div>
 
@@ -145,7 +145,7 @@ export default function BookingForm({ onSubmit, isLoading, withGuest }: BookingF
         <button
           type="submit"
           disabled={!isValid || isLoading}
-          className="mt-2 w-full rounded-xl bg-foreground py-3 text-sm font-semibold text-background transition-opacity disabled:opacity-40"
+          className="mt-2 w-full rounded-xl bg-primary py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-opacity disabled:opacity-40"
         >
           {isLoading ? "Réservation en cours..." : "Confirmer la réservation"}
         </button>

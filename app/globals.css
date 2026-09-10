@@ -124,3 +124,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Booking flow (/book) reuses the marketing home page's ink/gold identity.
+   Text/border tones are white-based (not CREAM) — on the home page CREAM is only
+   ever a light-section background fill, never text color on a dark section. */
+.book-theme {
+  --background: #0a0908;
+  --foreground: #ffffff;
+  --card: #141210;
+  --card-foreground: #ffffff;
+  --popover: #141210;
+  --popover-foreground: #ffffff;
+  --primary: #d4a94a;
+  --primary-foreground: #0a0908;
+  --secondary: #141210;
+  --secondary-foreground: #ffffff;
+  --muted: #1c1916;
+  --muted-foreground: rgba(255, 255, 255, 0.55);
+  --accent: #1c1916;
+  --accent-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #d4a94a;
+}

@@ -10,6 +10,7 @@ import BookingForm from "@/components/booking/BookingForm";
 import Image from "next/image";
 import { format, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
+import { Grain, GoldGlow } from "@/components/home/BrandAtmosphere";
 
 const STEPS = ["Créneau", "Prestation", "Infos"];
 
@@ -161,10 +162,13 @@ export default function BookPage() {
     (step === 1 && selectedService !== null && (!withGuest || guestService !== null));
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="book-theme relative min-h-screen bg-background">
+      <Grain className="fixed" />
+
       {/* Header */}
-      <header className="border-b border-border/50 px-4 py-4">
-        <div className="mx-auto max-w-lg flex justify-center">
+      <header className="relative overflow-hidden border-b border-border/50 px-4 py-4">
+        <GoldGlow className="h-full" />
+        <div className="relative mx-auto flex max-w-lg justify-center">
           <Image src="/IMG_8197-removebg-preview.png" alt="IB Barber" width={180} height={60} className="h-14 w-auto" />
         </div>
       </header>
@@ -188,7 +192,7 @@ export default function BookPage() {
                 <span
                   className={cn(
                     "flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold",
-                    i === step && "bg-foreground text-background",
+                    i === step && "bg-primary text-primary-foreground",
                     i < step && "bg-muted-foreground/20 text-foreground",
                     i > step && "bg-muted-foreground/10 text-muted-foreground/40"
                   )}
@@ -248,8 +252,8 @@ export default function BookPage() {
               className={cn(
                 "flex w-full items-center justify-between rounded-xl border p-4 transition-all",
                 withGuest
-                  ? "border-foreground bg-foreground/5"
-                  : "border-border hover:border-foreground/50"
+                  ? "border-primary bg-primary/10"
+                  : "border-border hover:border-primary/50"
               )}
             >
               <div className="text-left">
@@ -259,7 +263,7 @@ export default function BookPage() {
               <div
                 className={cn(
                   "flex h-6 w-10 shrink-0 items-center rounded-full p-0.5 transition-colors",
-                  withGuest ? "bg-foreground" : "bg-muted-foreground/30"
+                  withGuest ? "bg-primary" : "bg-muted-foreground/30"
                 )}
               >
                 <div
@@ -321,7 +325,7 @@ export default function BookPage() {
             <button
               onClick={() => setStep(step + 1)}
               disabled={!canGoNext}
-              className="flex-1 rounded-xl bg-foreground py-3 text-sm font-semibold text-background transition-opacity disabled:opacity-40"
+              className="flex-1 rounded-xl bg-primary py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-opacity disabled:opacity-40"
             >
               Continuer
             </button>

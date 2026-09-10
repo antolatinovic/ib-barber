@@ -14,7 +14,7 @@ export default function ServicePicker({ selectedService, onSelect, label, subtit
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold">{label ?? "Choisis ta prestation"}</h2>
+        <h2 className="text-2xl uppercase tracking-wide" style={{ fontFamily: "var(--font-bebas)" }}>{label ?? "Choisis ta prestation"}</h2>
         <p className="mt-1 text-sm text-muted-foreground">{subtitle ?? "Sélectionne le service souhaité"}</p>
       </div>
 
@@ -27,8 +27,8 @@ export default function ServicePicker({ selectedService, onSelect, label, subtit
               className={cn(
                 "flex items-center justify-between rounded-xl border p-4 text-left transition-all",
                 selectedService === key
-                  ? "border-foreground bg-foreground text-background"
-                  : "border-border hover:border-foreground/50"
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border hover:border-primary/50"
               )}
             >
               <div>
@@ -36,7 +36,7 @@ export default function ServicePicker({ selectedService, onSelect, label, subtit
                 <p
                   className={cn(
                     "text-sm",
-                    selectedService === key ? "text-background/70" : "text-muted-foreground"
+                    selectedService === key ? "text-primary-foreground/70" : "text-muted-foreground"
                   )}
                 >
                   {duration}
@@ -46,12 +46,12 @@ export default function ServicePicker({ selectedService, onSelect, label, subtit
                 className={cn(
                   "flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all",
                   selectedService === key
-                    ? "border-background bg-background"
+                    ? "border-primary-foreground bg-primary-foreground"
                     : "border-muted-foreground/40"
                 )}
               >
                 {selectedService === key && (
-                  <div className="h-2 w-2 rounded-full bg-foreground" />
+                  <div className="h-2 w-2 rounded-full bg-primary" />
                 )}
               </div>
             </button>
