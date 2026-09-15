@@ -63,7 +63,7 @@ export default function ReminderEmail({
             <Text style={consignesTitle}>Consignes</Text>
             <Text style={text}>
               En arrivant, envoie un message sur Snapchat à{" "}
-              <span style={recapValue}>@i-ftyyy08</span> pour qu&apos;on vienne
+              <span style={recapValue}>@ib-fty</span> pour qu&apos;on vienne
               t&apos;ouvrir.
             </Text>
             <Text style={text}>

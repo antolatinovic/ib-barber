@@ -16,7 +16,7 @@ export default function Footer() {
       />
       <p className="mt-4 text-sm text-white/50">
         Contacte-moi sur Snapchat —{" "}
-        <span className="font-medium text-white/80">@i-ftyyy08</span>
+        <span className="font-medium text-white/80">@ib-fty</span>
       </p>
       <p className="mt-6 text-xs text-white/30">
         © {new Date().getFullYear()} IB Barber

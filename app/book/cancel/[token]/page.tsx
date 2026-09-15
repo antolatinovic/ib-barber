@@ -147,7 +147,7 @@ export default function CancelPage() {
               <p className="mt-6 text-sm text-muted-foreground">
                 L&apos;annulation n&apos;est plus possible moins d&apos;1h avant le rendez-vous.
                 Contacte-moi sur Snapchat{" "}
-                <span className="font-medium text-foreground">@i-ftyyy08</span>
+                <span className="font-medium text-foreground">@ib-fty</span>
               </p>
             )}
           </>
@@ -196,7 +196,7 @@ export default function CancelPage() {
         {status === "error" && (
           <p className="text-sm text-muted-foreground">
             Une erreur est survenue. Réessaie ou contacte-moi sur Snapchat{" "}
-            <span className="font-medium text-foreground">@i-ftyyy08</span>
+            <span className="font-medium text-foreground">@ib-fty</span>
           </p>
         )}
       </div>

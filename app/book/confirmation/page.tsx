@@ -97,7 +97,7 @@ function ConfirmationContent() {
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>
               En arrivant, envoie un message sur Snapchat à{" "}
-              <span className="font-medium text-foreground">@i-ftyyy08</span>{" "}
+              <span className="font-medium text-foreground">@ib-fty</span>{" "}
               pour qu&apos;on vienne t&apos;ouvrir.
             </li>
             <li>
@@ -109,7 +109,7 @@ function ConfirmationContent() {
         <p className="mt-6 text-sm text-muted-foreground">
           Pour toutes demandes spécifique contacte moi sur Snapchat
           <br />
-          <span className="font-medium text-foreground">@i-ftyyy08</span>
+          <span className="font-medium text-foreground">@ib-fty</span>
         </p>
       </div>
     </div>

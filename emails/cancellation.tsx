@@ -55,7 +55,7 @@ export default function CancellationEmail({
           <Text style={text}>
             Pour reprendre rendez-vous, contacte-moi sur Snapchat :
           </Text>
-          <Text style={snapHandle}>@i-ftyyy08</Text>
+          <Text style={snapHandle}>@ib-fty</Text>
 
           <Hr style={hr} />
           <Text style={footer}>IB Barber</Text>

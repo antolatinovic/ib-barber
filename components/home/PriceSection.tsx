@@ -99,7 +99,7 @@ export default function PriceSection() {
 
         <p className="mt-6 text-sm text-white/50">
           Contacte-moi sur Snapchat —{" "}
-          <span className="font-medium text-white/80">@i-ftyyy08</span>
+          <span className="font-medium text-white/80">@ib-fty</span>
         </p>
       </div>
     </section>
