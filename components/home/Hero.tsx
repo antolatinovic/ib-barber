@@ -61,11 +61,7 @@ export default function Hero() {
             className="text-[3.25rem] leading-[0.95] text-white sm:text-7xl"
             style={{ fontFamily: "var(--font-bebas)" }}
           >
-            COUPE.
-            <br />
-            BARBE.
-            <br />
-            <span style={{ color: GOLD }}>DÉTAILLE.</span>
+            IB <span style={{ color: GOLD }}>BARBER</span>
           </h1>
 
           <p className="mt-6 max-w-xs text-base text-white/60">

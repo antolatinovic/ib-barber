@@ -36,7 +36,7 @@ export default function AboutSection() {
         className="mt-3 text-4xl leading-none sm:text-5xl"
         style={{ fontFamily: "var(--font-bebas)", color: INK }}
       >
-        Ce que tu vas vivre
+        EXPERIENCE
       </h2>
 
       <div className="mx-auto mt-12 grid max-w-lg gap-4">
