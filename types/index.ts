@@ -46,3 +46,8 @@ export const SERVICES: Record<Service, { label: string; duration: string; price:
   coupe: { label: "Coupe", duration: "20-25 min", price: "15€" },
   coupe_barbe: { label: "Coupe + Barbe", duration: "25-30 min", price: "20€" },
 };
+
+export const SERVICE_PRICES: Record<Service, number> = {
+  coupe: 15,
+  coupe_barbe: 20,
+};

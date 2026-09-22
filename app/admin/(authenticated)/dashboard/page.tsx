@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Calendar, Clock, TrendingUp, Euro } from "lucide-react";
+import { Calendar, Clock, TrendingUp, Euro, Scissors } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SERVICES, type Service } from "@/types";
 
 interface PeriodStats {
   totalSlots: number;
   bookedSlots: number;
   revenue: number;
+  byService: Record<Service, { count: number; revenue: number }>;
 }
 
 interface Stats {
@@ -124,6 +126,39 @@ export default function AdminDashboardPage() {
               <div key={key} className="rounded-xl border border-border p-4">
                 <p className="text-xs text-muted-foreground">{label}</p>
                 <p className="mt-1 text-2xl font-bold">{data?.revenue ?? 0}€</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Prestations */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+          <Scissors className="size-4" />
+          Prestations
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          {periods.map(({ label, key }) => {
+            const data = stats?.[key];
+            return (
+              <div key={key} className="rounded-xl border border-border p-4">
+                <p className="text-xs text-muted-foreground">{label}</p>
+                <div className="mt-2 space-y-2">
+                  {(Object.keys(SERVICES) as Service[]).map((service) => {
+                    const serviceData = data?.byService[service];
+                    return (
+                      <div key={service} className="flex items-center justify-between gap-2">
+                        <span className="text-xs text-muted-foreground">
+                          {SERVICES[service].label}
+                        </span>
+                        <span className="text-sm font-medium">
+                          {serviceData?.count ?? 0} · {serviceData?.revenue ?? 0}€
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             );
           })}

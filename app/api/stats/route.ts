@@ -1,16 +1,20 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient, createServiceClient } from "@/lib/supabase/server";
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, format } from "date-fns";
-
-const PRICES: Record<string, number> = {
-  coupe: 10,
-  coupe_barbe: 15,
-};
+import { SERVICE_PRICES, type Service } from "@/types";
 
 interface PeriodStats {
   totalSlots: number;
   bookedSlots: number;
   revenue: number;
+  byService: Record<Service, { count: number; revenue: number }>;
+}
+
+function emptyByService(): Record<Service, { count: number; revenue: number }> {
+  return {
+    coupe: { count: 0, revenue: 0 },
+    coupe_barbe: { count: 0, revenue: 0 },
+  };
 }
 
 async function getStatsForPeriod(
@@ -33,21 +37,31 @@ async function getStatsForPeriod(
 
   // Fetch bookings for those slots (avoid PostgREST join issues)
   let revenue = 0;
+  const byService = emptyByService();
   if (slotIds.length > 0) {
     const { data: bookings } = await supabase
       .from("bookings")
       .select("service, guest_service, cancelled_at")
       .in("slot_id", slotIds);
 
-    revenue = (bookings ?? [])
-      .filter((b) => !b.cancelled_at)
-      .reduce(
-        (sum, b) => sum + (PRICES[b.service] ?? 0) + (PRICES[b.guest_service] ?? 0),
-        0
-      );
+    for (const b of bookings ?? []) {
+      if (b.cancelled_at) continue;
+
+      const servicePrice = SERVICE_PRICES[b.service as Service] ?? 0;
+      revenue += servicePrice;
+      byService[b.service as Service].count += 1;
+      byService[b.service as Service].revenue += servicePrice;
+
+      if (b.guest_service) {
+        const guestPrice = SERVICE_PRICES[b.guest_service as Service] ?? 0;
+        revenue += guestPrice;
+        byService[b.guest_service as Service].count += 1;
+        byService[b.guest_service as Service].revenue += guestPrice;
+      }
+    }
   }
 
-  return { totalSlots, bookedSlots, revenue };
+  return { totalSlots, bookedSlots, revenue, byService };
 }
 
 export async function GET() {
