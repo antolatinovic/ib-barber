@@ -36,7 +36,7 @@ export default function AdminNav() {
                 className={cn(
                   "text-sm transition-colors",
                   pathname === item.href
-                    ? "font-medium text-foreground"
+                    ? "font-medium text-primary"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >

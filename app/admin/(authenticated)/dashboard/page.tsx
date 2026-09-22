@@ -54,7 +54,12 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-xl font-semibold">Dashboard</h1>
+      <h1
+        className="text-2xl uppercase tracking-wide text-foreground"
+        style={{ fontFamily: "var(--font-bebas)" }}
+      >
+        Dashboard
+      </h1>
 
       {/* Accès rapides */}
       <div className="space-y-3">
@@ -62,10 +67,10 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-2 gap-3">
           <Link
             href="/admin/slots"
-            className="rounded-xl border border-border p-5 transition-all hover:border-foreground/50"
+            className="rounded-xl border border-border p-5 transition-all hover:border-primary/50"
           >
             <div className="flex items-center gap-2">
-              <Clock className="size-4" />
+              <Clock className="size-4 text-primary" />
               <span className="text-sm font-semibold">Définir mes créneaux</span>
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
@@ -75,10 +80,10 @@ export default function AdminDashboardPage() {
 
           <Link
             href="/admin/bookings"
-            className="rounded-xl border border-border p-5 transition-all hover:border-foreground/50"
+            className="rounded-xl border border-border p-5 transition-all hover:border-primary/50"
           >
             <div className="flex items-center gap-2">
-              <Calendar className="size-4" />
+              <Calendar className="size-4 text-primary" />
               <span className="text-sm font-semibold">RDV</span>
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
@@ -91,7 +96,7 @@ export default function AdminDashboardPage() {
       {/* Taux de remplissage */}
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-          <TrendingUp className="size-4" />
+          <TrendingUp className="size-4 text-primary" />
           Taux de remplissage
         </div>
         <div className="grid grid-cols-3 gap-3">
@@ -116,7 +121,7 @@ export default function AdminDashboardPage() {
       {/* Revenus */}
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-          <Euro className="size-4" />
+          <Euro className="size-4 text-primary" />
           Revenus
         </div>
         <div className="grid grid-cols-3 gap-3">
@@ -125,7 +130,7 @@ export default function AdminDashboardPage() {
             return (
               <div key={key} className="rounded-xl border border-border p-4">
                 <p className="text-xs text-muted-foreground">{label}</p>
-                <p className="mt-1 text-2xl font-bold">{data?.revenue ?? 0}€</p>
+                <p className="mt-1 text-2xl font-bold text-primary">{data?.revenue ?? 0}€</p>
               </div>
             );
           })}
@@ -135,7 +140,7 @@ export default function AdminDashboardPage() {
       {/* Prestations */}
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-          <Scissors className="size-4" />
+          <Scissors className="size-4 text-primary" />
           Prestations
         </div>
         <div className="grid grid-cols-3 gap-3">

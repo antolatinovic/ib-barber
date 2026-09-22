@@ -125,10 +125,11 @@
   }
 }
 
-/* Booking flow (/book) reuses the marketing home page's ink/gold identity.
-   Text/border tones are white-based (not CREAM) — on the home page CREAM is only
-   ever a light-section background fill, never text color on a dark section. */
-.book-theme {
+/* Booking flow (/book) and the admin back-office (/admin) reuse the marketing
+   home page's ink/gold identity. Text/border tones are white-based (not CREAM) —
+   on the home page CREAM is only ever a light-section background fill, never
+   text color on a dark section. */
+.brand-theme {
   --background: #0a0908;
   --foreground: #ffffff;
   --card: #141210;

@@ -162,7 +162,7 @@ export default function BookPage() {
     (step === 1 && selectedService !== null && (!withGuest || guestService !== null));
 
   return (
-    <div className="book-theme relative min-h-screen bg-background">
+    <div className="brand-theme relative min-h-screen bg-background">
       <Grain className="fixed" />
 
       {/* Header */}

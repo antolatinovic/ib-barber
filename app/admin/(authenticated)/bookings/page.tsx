@@ -148,7 +148,10 @@ export default function AdminDashboardPage() {
         >
           <ChevronLeft className="size-5" />
         </button>
-        <h1 className="text-center text-lg font-semibold">
+        <h1
+          className="text-center text-xl uppercase tracking-wide text-foreground"
+          style={{ fontFamily: "var(--font-bebas)" }}
+        >
           Semaine du {weekLabel}
         </h1>
         <button
@@ -166,7 +169,7 @@ export default function AdminDashboardPage() {
           className={cn(
             "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors",
             view === "list"
-              ? "bg-foreground text-background"
+              ? "bg-primary text-primary-foreground"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
@@ -178,7 +181,7 @@ export default function AdminDashboardPage() {
           className={cn(
             "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors",
             view === "calendar"
-              ? "bg-foreground text-background"
+              ? "bg-primary text-primary-foreground"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
@@ -221,7 +224,7 @@ export default function AdminDashboardPage() {
                               {booking.first_name} {booking.last_name}
                             </span>
                             {booking.guest_first_name && (
-                              <span className="rounded-full bg-foreground/10 px-2 py-0.5 text-[10px] font-semibold text-foreground">
+                              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
                                 +1
                               </span>
                             )}

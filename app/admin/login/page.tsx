@@ -32,7 +32,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="brand-theme flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
           <Image src="/IMG_8197-removebg-preview.png" alt="IB Barber" width={288} height={96} className="mx-auto h-24 w-auto" />
@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading || !email || !password}
-            className="w-full rounded-xl bg-foreground py-3 text-sm font-semibold text-background transition-opacity disabled:opacity-40"
+            className="w-full rounded-xl bg-primary py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-opacity disabled:opacity-40"
           >
             {loading ? "Connexion..." : "Se connecter"}
           </button>

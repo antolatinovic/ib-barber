@@ -195,7 +195,10 @@ export default function WeekSlotBuilder() {
         >
           <ChevronLeft className="size-5" />
         </button>
-        <h1 className="text-center text-lg font-semibold">
+        <h1
+          className="text-center text-xl uppercase tracking-wide text-foreground"
+          style={{ fontFamily: "var(--font-bebas)" }}
+        >
           Semaine du {weekLabel}
         </h1>
         <button
@@ -223,12 +226,12 @@ export default function WeekSlotBuilder() {
                 className={cn(
                   "flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all",
                   day.active
-                    ? "border-foreground bg-foreground"
+                    ? "border-primary bg-primary"
                     : "border-muted-foreground/40"
                 )}
               >
                 {day.active && (
-                  <svg className="size-3 text-background" viewBox="0 0 12 12" fill="none">
+                  <svg className="size-3 text-primary-foreground" viewBox="0 0 12 12" fill="none">
                     <path d="M2 6L5 9L10 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 )}
@@ -302,7 +305,7 @@ export default function WeekSlotBuilder() {
         <button
           onClick={publish}
           disabled={isPublishing || generatedSlots.length === 0}
-          className="w-full rounded-xl bg-foreground py-3 text-sm font-semibold text-background transition-opacity disabled:opacity-40"
+          className="w-full rounded-xl bg-primary py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-opacity disabled:opacity-40"
         >
           {isPublishing ? "Publication..." : "Publier la semaine"}
         </button>

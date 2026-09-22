@@ -80,7 +80,7 @@ export default function CancelPage() {
     : "";
 
   return (
-    <div className="book-theme relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background px-4">
+    <div className="brand-theme relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background px-4">
       <Grain />
       <GoldGlow />
       <div className="relative mx-auto max-w-md text-center">

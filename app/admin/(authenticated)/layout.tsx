@@ -15,7 +15,7 @@ export default async function AuthenticatedAdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="brand-theme min-h-screen bg-background">
       <AdminNav />
       <main className="mx-auto max-w-2xl px-4 py-6">
         {children}

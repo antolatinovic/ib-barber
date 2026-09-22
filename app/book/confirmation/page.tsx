@@ -30,7 +30,7 @@ function ConfirmationContent() {
   const timeDisplay = withGuest && secondTime ? `${time} — ${secondTime}` : time;
 
   return (
-    <div className="book-theme relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background px-4">
+    <div className="brand-theme relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background px-4">
       <Grain />
       <GoldGlow />
       <div className="relative mx-auto max-w-md text-center">
@@ -118,7 +118,7 @@ function ConfirmationContent() {
 
 export default function ConfirmationPage() {
   return (
-    <Suspense fallback={<div className="book-theme min-h-screen bg-background" />}>
+    <Suspense fallback={<div className="brand-theme min-h-screen bg-background" />}>
       <ConfirmationContent />
     </Suspense>
   );
